@@ -1,2 +1,3 @@
-# webscraper-microservices-frontend
-The frontend of our webscraper microservices course
+Serve `index.html` with
+
+     knockout-frontend$  python -m SimpleHTTPServer 8090
