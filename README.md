@@ -1,3 +1,3 @@
-Serve `index.html` with
+# Frontend
 
-     knockout-frontend$  python -m SimpleHTTPServer 8090
+The frontend code of our full-stack crash course. 
