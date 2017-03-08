@@ -37,7 +37,7 @@ function BookmarkViewModel() {
         }
 
         // make POST request
-        $.ajax("http://localhost:7321/bookmarks", {
+        $.ajax("http://localhost:7231/bookmarks", {
             data: '{"url": "' + newUrl + ' ", "note": "' + newNote + '"}',
             type: "post",
             contentType: "application/json",
