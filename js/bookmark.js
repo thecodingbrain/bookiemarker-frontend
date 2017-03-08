@@ -37,7 +37,7 @@ function BookmarkViewModel() {
         }
 
         // make POST request
-        $.ajax("http://localhost:7230/bookmarks", {
+        $.ajax("http://localhost:7321/bookmarks", {
             data: '{"url": "' + newUrl + ' ", "note": "' + newNote + '"}',
             type: "post",
             contentType: "application/json",
@@ -94,7 +94,7 @@ function BookmarkViewModel() {
 
     // load bookmarks from server: GET on bookmarks resource
     self.loadBookmarks = function () {
-        $.ajax("http://localhost:7230/bookmarks", {
+        $.ajax("http://localhost:7231/bookmarks", {
             type: "get",
             success: function (allData) {
                 var json = ko.toJSON(allData);
