@@ -30,6 +30,7 @@ function BookmarkViewModel() {
     self.bookmarks = ko.observableArray(stored_bookmarks);
     self.url = ko.observable();
     self.query = ko.observable();
+    self.count = ko.observable(self.bookmarks().length);
 
     self.addBookmark = function() {
         var bookmark = new Bookmark(self.url(), "a new title", "100x100.png", "summary");
