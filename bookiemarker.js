@@ -27,8 +27,17 @@ function BookmarkViewModel() {
     var self = this;
 
     self.bookmarks = ko.observableArray(stored_bookmarks);
-    self.query = null; 
+    self.query = ko.observable(); 
     self.search = function(){
+        var searchResult = [];
+        for(var i=0; i < stored_bookmarks.length; i++){
+            var bookmark = stored_bookmarks[i];
+            var query = new RegExp(self.query(), 'i');
+            if (bookmark.url.search(query) > -1 || bookmark.title.search(query) > -1 || bookmark.summary.search(query) > -1){
+                searchResult.push(bookmark)
+            }
+        }
+        self.bookmarks(searchResult);
     };
 }
 
