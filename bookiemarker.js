@@ -1,13 +1,13 @@
 var stored_bookmarks = [
     {
         url: "http://codingbrain.com",
-        thumbnail: "100x100.png",
+        thumbnail: "cb.thumb.png",
         title: "CodingBrain School",
         summary: "Training for the busy developer"
     },
     {
         url: "http://news.ycombinator.com",
-        thumbnail: "100x100.png",
+        thumbnail: "hn.thumb.gif",
         title: "Hacker News",
         summary: "Tech news"
     }
