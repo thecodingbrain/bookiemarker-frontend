@@ -28,6 +28,24 @@ function BookmarkViewModel() {
 
     self.bookmarks = ko.observableArray(stored_bookmarks);
     self.query = ko.observable(); 
+    self.url = ko.observable();
+    
+    self.addBookmark = function() {
+        var bookmark = new Bookmark(self.url(), 
+            "a new title", "100x100.png", "summary");
+        stored_bookmarks.push(bookmark);
+        self.search();
+    };
+
+    self.deleteBookmark = function(bookmark){
+        for(var i = 0; i < stored_bookmarks.length; i++){
+            if (stored_bookmarks[i].url ==  bookmark.url){
+                stored_bookmarks.splice(i, 1);
+                self.search();
+            }
+        }        
+    };
+    
     self.search = function(){
         var searchResult = [];
         for(var i=0; i < stored_bookmarks.length; i++){
