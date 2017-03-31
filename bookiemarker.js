@@ -45,7 +45,11 @@ function BookmarkViewModel() {
             }
         }        
     };
-    
+
+    self.updateBookmark = function(bookmark) {
+        //alert('saved new summary: ' + bookmark.summary);
+    };    
+        
     self.search = function(){
         var searchResult = [];
         for(var i=0; i < stored_bookmarks.length; i++){

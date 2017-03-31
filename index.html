@@ -87,7 +87,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <textarea type="text" class="form-control" placeholder="Summary" data-bind="text: summary"></textarea>
+                            <textarea type="text" class="form-control" placeholder="Summary" data-bind="textInput: summary, event: {blur: $root.updateBookmark}"></textarea>
                         </div>
                     </div>
                     <div class="col-md-1">
