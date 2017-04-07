@@ -22,34 +22,36 @@ function BookmarkViewModel() {
     
     self.addBookmark = function() {
        // make POST request
-        $.ajax(BACKEND_ENDPOINT, {
-            data: {"url": self.url()},
-            type: "post",
+        $.ajax({
+            url: BACKEND_ENDPOINT,
+            method: "POST",
             contentType: "application/json",
-            success: function (bookmark) {
+            data: JSON.stringify({ url: self.url()}),
+            dataType: "json",
+            success: function(data) {
                 self.loadBookmarks();
-                self.bookmarks().push(bookmark);
             }
         });
     };
 
     // delete bookmark: send DELETE to bookmarks resource
     self.deleteBookmark = function (bookmark) {
-        $.ajax(bookmark.href, {
+        $.ajax({
+            url: bookmark.href,
             type: "delete",
             success: function (allData) {
                 self.loadBookmarks();
-                self.search();
             }
         });
     };
     
     // update bookmark: send PUT to existing bookmarks resource
     self.updateBookmark = function (bookmark) {
-        // make PUT request (or send PATCH then we don't need to include the created date)
-        $.ajax(bookmark.href, {
-            data: { "summary": bookmark.summary }
-            type: "patch",
+        // make PATCH request to change the summary
+        $.ajax({
+            url: bookmark.href,
+            data: JSON.stringify({ summary: bookmark.summary }),
+            type: "PATCH",
             contentType: "application/json",
             success: function (allData) {
                 self.loadBookmarks();
@@ -72,8 +74,10 @@ function BookmarkViewModel() {
     
     // load bookmarks from server: GET on bookmarks resource
     self.loadBookmarks = function () {
-        $.ajax(BACKEND_ENDPOINT, {
-            type: "get",
+        $.ajax({
+            url: BACKEND_ENDPOINT,
+            data: {sort: "created"},
+            type: "GET",
             success: function (allData) {
                 var json = ko.toJSON(allData);
                 var parsed = JSON.parse(json);
@@ -86,19 +90,21 @@ function BookmarkViewModel() {
                                     bookmark._links.self.href,  
                                     bookmark.url, 
                                     bookmark.title, 
-                                    bookmark.thumbnail, bookmark.summary)
+                                    bookmark.thumbnail, 
+                                    bookmark.summary);
                         });
                 } else {
                     stored_bookmarks = [];
                 }
 
             }
+        }).done(function(){
+            self.search();
         });
     };    
     
     // Load initial data
     self.loadBookmarks();  
-    self.bookmarks(stored_bookmarks);  
 }
 
 // Activates knockout.js
