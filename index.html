@@ -70,28 +70,29 @@
         </div>
 
         <!-- bookmark list comes here -->
-
-        <div class="row result" data-bind="foreach: bookmarks">
-            <div class="col-md-2">
-                <img src="100x100.png" alt="thumbnail" data-bind="attr:{ src: thumbnail}">
-            </div>
-            <div class="col-md-10">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4 data-bind="text: title">Bookmark Title 1</h4>
-                    </div>
+        <div  data-bind="foreach: bookmarks">            
+            <div class="row result">
+                <div class="col-md-2">
+                    <img src="100x100.png" alt="thumbnail" data-bind="attr:{ src: thumbnail}">
                 </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="#" data-bind="attr:{ href: url}, text: url">bookmark url 1</a>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <textarea type="text" class="form-control" placeholder="Summary" data-bind="text: summary"></textarea>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 data-bind="text: title">Bookmark Title 1</h4>
                         </div>
                     </div>
-                    <div class="col-md-1">
-                        <button class="btn btn-danger" data-bind="click: $root.deleteBookmark">Delete</button>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="#" data-bind="attr:{ href: url}, text: url">bookmark url 1</a>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <textarea type="text" class="form-control" placeholder="Summary" data-bind="text: summary"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-danger" data-bind="click: $root.deleteBookmark">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
