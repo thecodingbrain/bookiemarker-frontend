@@ -29,6 +29,7 @@ function BookmarkViewModel() {
             data: JSON.stringify({ url: self.url()}),
             dataType: "json",
             success: function(data) {
+                self.query("");
                 self.loadBookmarks();
             }
         });
