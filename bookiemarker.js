@@ -1,6 +1,6 @@
 var BACKEND_ENDPOINT = "http://localhost:7231/bookmarks"; 
 
-self.stored_bookmarks = [];
+var bookmarksCache = [];
 
 // The bookmark model
 function Bookmark(href, url, title, thumbnail, summary) {
@@ -62,8 +62,8 @@ function BookmarkViewModel() {
         
     self.search = function(){
         var searchResult = [];
-        for(var i=0; i < stored_bookmarks.length; i++){
-            var bookmark = stored_bookmarks[i];
+        for(var i=0; i < bookmarksCache.length; i++){
+            var bookmark = bookmarksCache[i];
             var query = new RegExp(self.query(), 'i');
             if (
                 bookmark.url.search(query) > -1 || bookmark.title.search(query) > -1 || bookmark.summary.search(query) > -1){
@@ -80,24 +80,28 @@ function BookmarkViewModel() {
             data: {sort: "created"},
             type: "GET",
             success: function (allData) {
+                bookmarksCache = [];
                 var json = ko.toJSON(allData);
                 var parsed = JSON.parse(json);
                 if (parsed._embedded) {
                     var parsedBookmarks = parsed._embedded.bookmarks;
-                    stored_bookmarks = 
-                        $.map(parsedBookmarks, 
-                            function (bookmark) {
-                                return new Bookmark(
-                                    bookmark._links.self.href,  
-                                    bookmark.url, 
-                                    bookmark.title, 
-                                    bookmark.thumbnail, 
-                                    bookmark.summary);
-                        });
-                } else {
-                    stored_bookmarks = [];
+                    var pollingRequired = false;
+                    for (var i=0; i < parsedBookmarks.length; i++){
+                        var bookmark = parsedBookmarks[i];
+                        if (!bookmark.title){
+                            pollingRequired = true;
+                        }
+                        bookmarksCache.push(new Bookmark(
+                            bookmark._links.self.href,  
+                            bookmark.url, 
+                            bookmark.title, 
+                            bookmark.thumbnail, 
+                            bookmark.summary));
+                    }
+                    if (pollingRequired){
+                        setTimeout(self.loadBookmarks, 5000);
+                    }
                 }
-
             }
         }).done(function(){
             self.search();
