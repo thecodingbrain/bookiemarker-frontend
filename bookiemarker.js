@@ -77,7 +77,7 @@ function BookmarkViewModel() {
     self.loadBookmarks = function () {
         $.ajax({
             url: BACKEND_ENDPOINT,
-            data: {sort: "created"},
+            data: {sort: "created,desc"},
             type: "GET",
             success: function (allData) {
                 bookmarksCache = [];
