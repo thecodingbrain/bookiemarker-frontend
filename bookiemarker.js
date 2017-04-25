@@ -3,8 +3,9 @@ var BACKEND_ENDPOINT = "http://localhost:7231/bookmarks";
 var bookmarksCache = [];
 
 // The bookmark model
-function Bookmark(href, url, title, thumbnail, summary) {
+function Bookmark(href, created, url, title, thumbnail, summary) {
     var self = this;
+    self.created = created;
     self.href = href;
     self.url = url;
     self.summary = summary;
@@ -24,7 +25,7 @@ function BookmarkViewModel() {
         $.ajax({
             url: BACKEND_ENDPOINT,
             type: "GET",
-            data: {sort: "created,desc"}
+            data: {sort: "created,desc"},
             success: function(data){
                 bookmarksCache = [];
                 if (data._embedded){
@@ -33,6 +34,7 @@ function BookmarkViewModel() {
                         var bookmark = bookmarks[i];
                         bookmarksCache.push(new Bookmark(
                             bookmark._links.self.href,
+                            bookmark.created,
                             bookmark.url,
                             bookmark.title,
                             bookmark.thumbnail,
