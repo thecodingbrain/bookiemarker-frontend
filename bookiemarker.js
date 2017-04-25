@@ -47,23 +47,38 @@ function BookmarkViewModel() {
     };
     
     self.addBookmark = function() {
-        var bookmark = new Bookmark(self.url(), 
-            "a new title", "100x100.png", "summary");
-        bookmarksCache.push(bookmark);
-        self.search();
+        $.ajax({
+            url: BACKEND_ENDPOINT,
+            type: "POST",
+            contentType: "application/json",
+            data: ko.toJSON(self),
+            success: function(data){
+                self.query("");
+                self.loadBookmarks();
+            }
+        });
     };
 
     self.deleteBookmark = function(bookmark){
-        for(var i = 0; i < bookmarksCache.length; i++){
-            if (bookmarksCache[i].url ==  bookmark.url){
-                bookmarksCache.splice(i, 1);
-                self.search();
+        $.ajax({
+            url: bookmark.href,
+            type: "DELETE",
+            success: function(data){
+                self.loadBookmarks();
             }
-        }        
+        });
     };
 
     self.updateBookmark = function(bookmark) {
-        //alert('saved new summary: ' + bookmark.summary);
+        $.ajax({
+            url: bookmark.href,
+            type: "PUT",
+            contentType: "application/json",
+            data: ko.toJSON(bookmark),
+            success: function(data){
+                self.loadBookmarks();
+            }
+        });
     };    
         
     self.search = function(){
