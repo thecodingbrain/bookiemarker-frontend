@@ -24,6 +24,7 @@ function BookmarkViewModel() {
         $.ajax({
             url: BACKEND_ENDPOINT,
             type: "GET",
+            data: {sort: "created,desc"}
             success: function(data){
                 bookmarksCache = [];
                 if (data._embedded){
