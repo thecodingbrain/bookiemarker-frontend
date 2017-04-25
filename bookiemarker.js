@@ -1,21 +1,11 @@
-var stored_bookmarks = [
-    {
-        url: "http://codingbrain.com",
-        thumbnail: "cb.thumb.png",
-        title: "CodingBrain School",
-        summary: "Training for the busy developer"
-    },
-    {
-        url: "http://news.ycombinator.com",
-        thumbnail: "hn.thumb.gif",
-        title: "Hacker News",
-        summary: "Tech news"
-    }
-];
+var BACKEND_ENDPOINT = "http://localhost:7231/bookmarks";
+
+var bookmarksCache = [];
 
 // The bookmark model
-function Bookmark(url, title, thumbnail, summary) {
+function Bookmark(href, url, title, thumbnail, summary) {
     var self = this;
+    self.href = href;
     self.url = url;
     self.summary = summary;
     self.title = title;
@@ -26,21 +16,47 @@ function Bookmark(url, title, thumbnail, summary) {
 function BookmarkViewModel() {
     var self = this;
 
-    self.bookmarks = ko.observableArray(stored_bookmarks);
+    self.bookmarks = ko.observableArray(bookmarksCache);
     self.query = ko.observable(); 
     self.url = ko.observable();
+    
+    self.loadBookmarks = function() {
+        $.ajax({
+            url: BACKEND_ENDPOINT,
+            type: "GET",
+            success: function(data){
+                bookmarksCache = [];
+                if (data._embedded){
+                    var bookmarks = data._embedded.bookmarks;
+                    for (var i=0; i < bookmarks.length; i++){
+                        var bookmark = bookmarks[i];
+                        bookmarksCache.push(new Bookmark(
+                            bookmark._links.self.href,
+                            bookmark.url,
+                            bookmark.title,
+                            bookmark.thumbnail,
+                            bookmark.summary
+                        ));
+                        
+                    }
+                }
+            }
+        }).done(function(){
+            self.search();
+        });
+    };
     
     self.addBookmark = function() {
         var bookmark = new Bookmark(self.url(), 
             "a new title", "100x100.png", "summary");
-        stored_bookmarks.push(bookmark);
+        bookmarksCache.push(bookmark);
         self.search();
     };
 
     self.deleteBookmark = function(bookmark){
-        for(var i = 0; i < stored_bookmarks.length; i++){
-            if (stored_bookmarks[i].url ==  bookmark.url){
-                stored_bookmarks.splice(i, 1);
+        for(var i = 0; i < bookmarksCache.length; i++){
+            if (bookmarksCache[i].url ==  bookmark.url){
+                bookmarksCache.splice(i, 1);
                 self.search();
             }
         }        
@@ -52,8 +68,8 @@ function BookmarkViewModel() {
         
     self.search = function(){
         var searchResult = [];
-        for(var i=0; i < stored_bookmarks.length; i++){
-            var bookmark = stored_bookmarks[i];
+        for(var i=0; i < bookmarksCache.length; i++){
+            var bookmark = bookmarksCache[i];
             var query = new RegExp(self.query(), 'i');
             if (bookmark.url.search(query) > -1 || bookmark.title.search(query) > -1 || bookmark.summary.search(query) > -1){
                 searchResult.push(bookmark)
@@ -61,6 +77,9 @@ function BookmarkViewModel() {
         }
         self.bookmarks(searchResult);
     };
+    
+    // Load initial data
+    self.loadBookmarks();
 }
 
 // Activates knockout.js
