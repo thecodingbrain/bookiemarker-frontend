@@ -30,8 +30,12 @@ function BookmarkViewModel() {
                 bookmarksCache = [];
                 if (data._embedded){
                     var bookmarks = data._embedded.bookmarks;
+                    var pollingRequired = false;
                     for (var i=0; i < bookmarks.length; i++){
                         var bookmark = bookmarks[i];
+                        if (!bookmark.title){
+                            pollingRequired = true;
+                        }
                         bookmarksCache.push(new Bookmark(
                             bookmark._links.self.href,
                             bookmark.created,
@@ -40,7 +44,9 @@ function BookmarkViewModel() {
                             bookmark.thumbnail,
                             bookmark.summary
                         ));
-                        
+                    }
+                    if (pollingRequired){
+                        setTimeout(self.loadBookmarks, 5000);
                     }
                 }
             }
